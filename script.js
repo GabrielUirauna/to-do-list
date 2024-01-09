@@ -62,13 +62,96 @@ document.addEventListener("click", function (event) {
   }
 });
 
-document.addEventListener("click", function (event) {
-  if (event.target.classList.contains("delete-all")) {
-    var taskList = document.getElementById("task-list");
-    taskList.innerHTML = "";
+document.addEventListener("DOMContentLoaded", () => {
+  const canvasObj = init("canvas");
+  const c = canvasObj.c;
+  const canvas = canvasObj.canvas;
+  const mouse = {
+    x: undefined,
+    y: undefined,
+  };
+  const maxRadius = 40;
+  const minRadius = 2;
+  const colorArray = [
+    "#FFC312",
+    "#C4E538",
+    "#12CBC4",
+    "#FDA7DF",
+    "#ED4C67",
+    "#F79F1F",
+    "#A3CB38",
+    "#1289A7",
+    "#D980FA",
+    "#B53471",
+    "#EE5A24",
+    "#009432",
+    "#0652DD",
+    "#9980FA",
+    "#833471",
+    "#EA2027",
+    "#006266",
+    "#1B1464",
+    "#5758BB",
+    "#6F1E51",
+  ];
+  let circleArray = [];
 
-    // Save tasks to local storage
-    localStorage.setItem("tasks", taskList.innerHTML);
+  window.addEventListener("mousemove", (event) => {
+    mouse.x = event.x;
+    mouse.y = event.y;
+  });
+
+  window.addEventListener("resize", () => {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    init();
+  });
+
+  function Circle(x, y, dx, dy, radius, minRadius, maxRadius) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.radius = radius;
+    this.minRadius = minRadius;
+    this.maxRadius = maxRadius;
+    this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
+
+    this.draw = function () {
+      c.beginPath();
+      c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      // c.strokeStyle = "blue";
+      // c.stroke();
+      c.fillStyle = this.color;
+      c.fill();
+    };
+
+    this.update = function () {
+      if (this.x + this.radius > w || this.x - this.radius < 0) {
+        this.dx = -this.dx;
+      }
+      if (this.y + this.radius > h || this.y - this.radius < 0) {
+        this.dy = -this.dy;
+      }
+      this.x += this.dx;
+      this.y += this.dy;
+
+      // interactivity
+      if (
+        mouse.x - this.x < 50 &&
+        mouse.x - this.x > -50 &&
+        mouse.y - this.y < 50 &&
+        mouse.y - this.y > -50 &&
+        this.radius < this.maxRadius
+      ) {
+        this.radius += 1;
+      }
+      if (this.radius > this.minRadius) {
+        this.radius -= 1;
+      }
+
+      this.draw();
+    }
   }
 })
 
