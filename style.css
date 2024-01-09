@@ -48,15 +48,8 @@ h1 {
     margin-left: 5px;
 }
 
-/* animaçao do mouse */
+/* fazer um fadeOut quando todas as tarefas forem excluidas*/
 
-.task-item:hover .task-actions {
-    visibility: visible;
-    /* Animaçao */
-    transition: all 0.5s ease-in-out;
-}
-
-.task-item .task-actions {
-    transition: all 0.5s ease-in-out;
-    visibility: hidden;
+#task-list .task-item:last-child {
+    animation: fadeOut 0.5s ease-in-out;
 }
